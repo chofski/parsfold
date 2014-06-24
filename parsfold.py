@@ -3,7 +3,8 @@ parsfold.py
 
 Use experimental PARS data to generate a set of potential foldings ignoring
 energy considerations. Only returns fully matching sets of pairs in Vienna
-format (using dots and brackets) - discounts those cases that are invalid.
+format (using dots and brackets notation). Will add ability to handle 
+non-fully-matching regions soon.
 
 Author:  Thomas E. Gorochowski 
 Updated: 26/11/2013
@@ -84,7 +85,7 @@ def match_recursion (regions, seq_regions, list_to_add_to, sub_solution,
 	"""
 	Recursive function that generates the entire possible matching tree. If
 	a non-complete matching of all regions is found then the matches for that
-	branch are removed.
+	branch are removed (self-pruning).
 	"""
 	r1 = str(Seq(seq_regions[region_to_match]).reverse_complement())
 	r1_matched = False
@@ -125,6 +126,15 @@ def match_recursion (regions, seq_regions, list_to_add_to, sub_solution,
 		list_to_add_to.append(sub_solution)
 	return list_to_add_to
 
+def save_to_fasta_like_format (data, structure_preds, filename):
+	"""
+	Saves the predicted structures from the data to FASTA-like format
+	that includes the gene names, sequence, PARS data, and Vienna
+	RNAfold style dot/bracket notation for structure.
+	"""
+	# TODO :S
+	return
+
 def generate_all_matches (seq_data, pars_data):
 	"""
 	Calculates all the potential matches and outputs list of possibilities
@@ -135,7 +145,7 @@ def generate_all_matches (seq_data, pars_data):
 	# Using these extract their sequences
 	seq_regions = find_seq_regions(regions, seq_data)
 	# Start at beginning and... match! Use a recursive method to generate full
-	# matching tree.
+	# matching tree. Return all possible solutions.
 	return match_recursion(regions, seq_regions, [], [], [], 0, 1)
 
 def test_hard_coded ():
